@@ -21,7 +21,7 @@ app.use('/api/v1/auth',auth)
 const PORT=process.env.PORT || 5000;  // || == or (PORT or 5000)
 
 // What is this?
-const server = app.listen(PORT, console.log('Server ruinning in ', process.env.NODE_ENV, ' mode on port ', PORT));
+const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, ' mode on port ', PORT));
 
 // What is this?
 // Handle unhandled promise rejections
