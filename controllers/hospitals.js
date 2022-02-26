@@ -4,7 +4,7 @@ const Hospital = require('../models/Hospital');
 //@des      Get all hospitals
 //@route    GET /api/v1/hospitals
 //@access   Public
-exports.getHospitals= async (req,res,next) => {
+const getHospitals= async (req,res,next) => {
     try {
         const hospitals = await Hospital.find();
         res.status(200).json({success: true,count:hospitals.length,data:hospitals});
@@ -16,7 +16,7 @@ exports.getHospitals= async (req,res,next) => {
 //@des      Get single hospital
 //@route    GET /api/v1/hospitals/:id
 //@access   Public
-exports.getHospital= async (req,res,next)  => {
+const getHospital= async (req,res,next)  => {
     try {
         const hospital = await Hospital.findById(req.params.id);
         if(!hospital) {
@@ -31,7 +31,7 @@ exports.getHospital= async (req,res,next)  => {
 //@des      Create a hospital
 //@route    POST /api/v1/hospitals
 //@access   Private
-exports.createHospitals= async (req,res,next) => {
+const createHospitals= async (req,res,next) => {
     const hospital = await Hospital.create(req.body);
     res.status(201).json({success: true, data: hospital});
 };
@@ -39,7 +39,7 @@ exports.createHospitals= async (req,res,next) => {
 //@des      Update a hospital
 //@route    PUT /api/v1/hospitals/:id
 //@access   Public
-exports.updateHospitals= async (req,res,next) => {
+const updateHospitals= async (req,res,next) => {
     try {
     const hospital = await Hospital.findByIdAndUpdate(req.params.id,req.body, {
         new: true,
@@ -57,7 +57,7 @@ exports.updateHospitals= async (req,res,next) => {
 //@des      Delete a hospital
 //@route    DELETE /api/v1/hospitals/:id
 //@access   Public
-exports.deleteHospitals= async (req,res,next) => {
+const deleteHospitals= async (req,res,next) => {
     try {
         const hospital = await Hospital.findByIdAndDelete(req.params.id, req.body);
 
@@ -69,3 +69,5 @@ exports.deleteHospitals= async (req,res,next) => {
         res.status(400).json({success: false});
     }
 };
+
+module.exports = {getHospital, getHospitals, createHospitals, updateHospitals, deleteHospitals};
