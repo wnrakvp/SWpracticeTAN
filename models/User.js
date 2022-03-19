@@ -36,18 +36,19 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Encrypt password using bcrypt
-UserSchema.pre('save', async () => {
+UserSchema.pre('save', async function () { // ตรงนี้เปลี่ยนเป็น Arrow Function ไม่ได้
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
 // Sign JWT and return
-UserSchema.methods.getSignedAccessToken = () => jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
-  expiresIn: process.env.JWT_EXPIRE
-});
+UserSchema.methods.getSignedJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
+};
 
 // Match user entered password to hased password in database
-UserSchema.methods.matchPassword = async (enteredPassword) => {
-  await bcrypt.compare(enteredPassword, this.password);
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  const response = await bcrypt.compare(enteredPassword, this.password);
+  return response;
 };
 module.exports = mongoose.model('User', UserSchema);

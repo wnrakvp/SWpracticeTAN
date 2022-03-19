@@ -1,12 +1,11 @@
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const refreshTokens = [];
+// const refreshTokens = [];
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token
-  const accessToken = user.getSignedAccessToken();
-  const refreshToken = jwt.sign(user.name, process.env.REFRESH_TOKEN_SECRET);
-  refreshTokens.push(refreshToken);
+  const accessToken = user.getSignedJwtToken();
+  // const refreshToken = jwt.sign(user.name, process.env.REFRESH_TOKEN_SECRET);
+  // refreshTokens.push(refreshToken);
   const options = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
@@ -20,8 +19,8 @@ const sendTokenResponse = (user, statusCode, res) => {
   res.status(statusCode).cookie('token', accessToken, options).json({
     success: true,
     accessToken,
-    refreshToken,
-    refreshTokenList: refreshTokens,
+    // refreshToken,
+    // refreshTokenList: refreshTokens,
   });
 };
 // @desc     Register user
@@ -46,7 +45,7 @@ exports.register = async (req, res) => {
     if (err.code === 11000) {
       res.status(400).json({ success: false, msg: 'Email already existed!.' });
     } else {
-      res.status(400).json({ success: false, msg: 'Unknonw error code.' });
+      res.status(400).json({ success: false, msg: 'Unknown error code.' });
     }
     console.log(err.stack);
   }
@@ -84,6 +83,5 @@ exports.login = async (req, res) => {
 // @route    GET /api/v1/auth/me
 // @access   Private
 exports.getMe = (req, res) => {
-  const { user } = req.user;
-  res.status(200).json({ success: true, data: user });
+  res.status(200).json({ success: true, data: req.user });
 };

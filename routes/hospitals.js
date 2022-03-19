@@ -6,9 +6,13 @@ const {
   deleteHospitals,
   updateHospitals,
 } = require('../controllers/hospitals');
+const appointmentRouter = require('./appointment');
 
 const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
+
+// Re-route into other resource routers
+router.use('/:hospitalId/appointments/', appointmentRouter);
 // Hospital path
 router
   .route('/')
