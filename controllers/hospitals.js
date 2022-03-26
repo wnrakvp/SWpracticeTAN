@@ -1,4 +1,5 @@
 const Hospital = require('../models/Hospital');
+const vacCenter = require('../models/VacCenter');
 
 // Method ของ Hospital (ex. Hospital.findById) มาจาก Mongoose
 // @des      Get all hospitals
@@ -119,10 +120,22 @@ const deleteHospitals = async (req, res) => {
   }
 };
 
+const getVacCenters = (req, res) => {
+  vacCenter.getAll((err, data) => {
+    if (err) {
+      return res.status(500).send({
+        message: err.message || 'Some error occured while retrieving Vaccine Centers.'
+      });
+    }
+    return res.send(data);
+  });
+};
+
 module.exports = {
   getHospital,
   getHospitals,
   createHospitals,
   updateHospitals,
   deleteHospitals,
+  getVacCenters
 };
