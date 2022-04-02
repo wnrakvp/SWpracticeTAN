@@ -4,9 +4,13 @@ const User = require('../models/User');
 // Protect routes
 exports.protect = async (req, res, next) => {
   // Split headers to get userToken
-  const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
   // Make sure token exists
-  if (!token) {
+  if (!token || token == 'null') {
     return res
       .status(401)
       .json({ success: false, message: 'Not authorize to access this route' });
