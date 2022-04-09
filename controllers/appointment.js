@@ -109,8 +109,8 @@ exports.updateAppointment = async (req, res) => {
     }
     // Make sure user is the appointment owner
     if (
-      appointment.user.toString() !== req.user.id &&
-      req.user.role !== 'admin'
+      appointment.user.toString() !== req.user.id
+      && req.user.role !== 'admin'
     ) {
       return res.status(401).json({
         success: false,
@@ -139,8 +139,8 @@ exports.deleteAppointment = async (req, res) => {
       throw new SyntaxError('Cannot find data.');
     }
     if (
-      appointment.user.toString() !== req.user.id &&
-      req.user.role !== 'admin'
+      appointment.user.toString() !== req.user.id
+      && req.user.role !== 'admin'
     ) {
       return res.status(401).json({
         success: false,

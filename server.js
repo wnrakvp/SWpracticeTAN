@@ -7,6 +7,8 @@ const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const cors = require('cors');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 const connectDB = require('./config/db');
 // Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -31,13 +33,33 @@ app.use(xss());
 // Rate Limiting
 const limiter = rateLimit({
   windowsMS: 10 * 60 * 1000,
-  max: 1
+  max: 100,
 });
 app.use(limiter);
 // Prevent http params pollutions
 app.use(hpp());
-// Prevent http params pollutions
+// Enable CORS
 app.use(cors());
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Library API',
+      version: '1.0.0',
+      description: 'A simple Express VacQ API',
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000/api/v1',
+      }
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 // Mount routers REST
 app.use('/api/v1/hospitals', hospitals);
 app.use('/api/v1/auth', auth);
